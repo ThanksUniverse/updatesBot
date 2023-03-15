@@ -9,13 +9,6 @@ module.exports = (client) => {
    isOnline(client)
 };
 
-function incrementSave(c) {
-   commandCounter++;
-   data.commandCounter = commandCounter;
-   fs.writeFileSync('./data.json', JSON.stringify(data))
-   client.user.setActivity(`in ${client.guilds.cache.size} servers | ${commandCounter} commands executed`);
-}
-
 function isOnline(client) {
    console.log(`${client.user.tag} has logged in, with ${client.users.cache.size} users in ${client.channels.cache.size} channels inside ${client.guilds.cache.size} servers.`);
    client.user.setActivity({
