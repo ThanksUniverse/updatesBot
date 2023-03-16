@@ -1,34 +1,28 @@
-const config = require("../config.json");
-const { Client, GatewayIntentBits, EmbedBuilder, PermissionsBitField, Permissions, MessageEmbed, ActivityType } = require("discord.js");
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers] });
-const eventHandler = require("./handlers/eventHandler");
+const config = require('../config.json')
+const { Client, IntentsBitField } = require('discord.js');
+const mongoose = require('mongoose');
+const eventHandler = require('./handlers/eventHandler');
 
-eventHandler(client);
+const client = new Client({
+  intents: [
+    IntentsBitField.Flags.Guilds,
+    IntentsBitField.Flags.GuildMembers,
+    IntentsBitField.Flags.GuildMessages,
+    IntentsBitField.Flags.GuildPresences,
+    IntentsBitField.Flags.MessageContent,
+  ],
+});
 
-/* 
+(async () => {
+  try {
+    mongoose.set('strictQuery', false);
+    await mongoose.connect(config.mongoose);
+    console.log('Connected to DB.');
 
-client.on('messageCreate', (msg) => {
-   if (msg.author.bot) {
-      return;
-   }
-   if (msg.content === 'ping') {
-      msg.reply('pong')
-   }
-   incrementSave()
-})
+    eventHandler(client);
 
-client.on('interactionCreate', (interaction) => {
-   if (!interaction.isChatInputCommand()) return;
-
-   if (interaction.isChatInputCommand()) {
-
-      const it = interaction.commandName;
-
-
-
-   }
-   incrementSave()
-})
- */
-
-client.login(config.token)
+    client.login(config.token);
+  } catch (error) {
+    console.log(`Error: ${error}`);
+  }
+})();
