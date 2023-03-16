@@ -1,4 +1,5 @@
 const { Client, Interaction, ApplicationCommandOptionType } = require('discord.js')
+const GameUpdate = require('../../models/gameUpdate')
 
 module.exports = {
 
@@ -7,9 +8,37 @@ module.exports = {
     * @param {Interaction} interaction 
     */
 
-   callback: (client, interaction) => {
+   callback: async (client, interaction) => {
       const registerGame = interaction.options.get('game-update').value
-      interaction.reply(`Registered ${registerGame}`)
+      const guild = interaction.guild.id;
+      const channel = interaction.channel.id;
+      const channelName = interaction.channel.name;
+
+      if (!interaction.inGuild()) {
+         interaction.reply(`You can only use this command inside a server.`);
+         return;
+      }
+
+      try {
+         let gameUpdate = await GameUpdate.findOne({ name: registerGame });
+
+         if (!gameUpdate) {
+            gameUpdate = new GameUpdate({
+               name: registerGame,
+               guildId: guild,
+               channelId: channel,
+            });
+         } else {
+            if (!gameUpdate.guildId.includes(guild)) {
+               gameUpdate.guildId.push(guild)
+            }
+         }
+
+         await gameUpdate.save();
+         interaction.reply(`This channel (${channelName}) has been registered to receive ${registerGame} update notifications.`);
+      } catch (error) {
+         console.log(`Error with registerGameSystem ${error}`)
+      }
    },
 
    name: 'register',

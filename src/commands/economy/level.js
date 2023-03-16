@@ -46,7 +46,7 @@ module.exports = {
       })
 
       let currentRank = allLevels.findIndex((lvl) => lvl.userId === targetUserId) + 1;
-      const status = targetUserObj.presence.status || 'dnd';
+      const status = targetUserObj.presence.status ? targetUserObj.presence.status : 'idle';
 
       const rank = new canvacord.Rank()
          .setAvatar(targetUserObj.user.displayAvatarURL({ size: 128 }))

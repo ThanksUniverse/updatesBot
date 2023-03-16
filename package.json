@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "canvacord": "^5.4.8",
+    "cheerio": "^1.0.0-rc.12",
     "discord.js": "^14.8.0",
     "fs": "^0.0.1-security",
     "mongoose": "^7.0.2",

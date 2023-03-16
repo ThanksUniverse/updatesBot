@@ -53,7 +53,10 @@ module.exports = {
          userId: commandOwner,
          guildId: interaction.guild.id,
       });
-      const dailyAmount = fetchedLevel.level || 1;
+      let dailyAmount = 1;
+      if (fetchedLevel.level && fetchedLevel.level > 0) {
+        dailyAmount = fetchedLevel.level;
+      }
       user.balance += dailyAmount;
       await user.save();
 
